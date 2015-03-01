@@ -10,7 +10,7 @@ module DeviseTokenAuth::Concerns::User
       self.devise_modules.delete(:omniauthable)
     end
 
-    serialize :tokens, JSON
+    # serialize :tokens, JSON
 
     validates :email, presence: true, email: true, if: Proc.new { |u| u.provider == 'email' }
     validates_presence_of :uid, if: Proc.new { |u| u.provider != 'email' }
@@ -19,8 +19,8 @@ module DeviseTokenAuth::Concerns::User
     validate :unique_email_user, on: :create
 
     # can't set default on text fields in mysql, simulate here instead.
-    after_save :set_empty_token_hash
-    after_initialize :set_empty_token_hash
+    # after_save :set_empty_token_hash
+    # after_initialize :set_empty_token_hash
 
     # keep uid in sync with email
     before_save :sync_uid
@@ -215,7 +215,7 @@ module DeviseTokenAuth::Concerns::User
     res = "#{uri.scheme}://#{uri.host}"
     res += ":#{uri.port}" if (uri.port and uri.port != 80 and uri.port != 443)
     res += "#{uri.path}" if uri.path
-    res += '#'
+    # res += '#'
     res += "#{uri.fragment}" if uri.fragment
     res += "?#{params.to_query}"
 
@@ -229,16 +229,16 @@ module DeviseTokenAuth::Concerns::User
     end
   end
 
-  def set_empty_token_hash
-    self.tokens ||= {} if has_attribute?(:tokens)
-  end
+  # def set_empty_token_hash
+  #   self.tokens ||= {} if has_attribute?(:tokens)
+  # end
 
   def sync_uid
     self.uid = email if provider == 'email'
   end
 
   def destroy_expired_tokens
-    self.tokens.delete_if{|cid,v|
+    self.tokens.delete_if {|cid,v|
       expiry = v[:expiry] || v["expiry"]
       DateTime.strptime(expiry.to_s, '%s') < Time.now
     }
