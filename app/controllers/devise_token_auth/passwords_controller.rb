@@ -27,7 +27,7 @@ module DeviseTokenAuth
         email = resource_params[:email]
       end
 
-      @resource = resource_class.where(uid: email, provider: 'email').first
+      @resource = resource_class.where(email: email).first
       
       errors = nil
       error_status = 400
