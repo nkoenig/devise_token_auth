@@ -1,7 +1,10 @@
+require 'mongoid-locker'
 module DeviseTokenAuth::Concerns::User
   extend ActiveSupport::Concern
 
   included do
+    include Mongoid::Locker
+    
     # Hack to check if devise is already enabled
     unless self.method_defined?(:devise_modules)
       devise :database_authenticatable, :registerable,
