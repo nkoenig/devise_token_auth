@@ -15,7 +15,8 @@ module DeviseTokenAuth
           q_value.downcase!
         end
 
-        @resource = resource_class.where(uid: email, provider: 'email').first
+        # @resource = resource_class.where(uid: email, provider: 'email').first
+        @resource = resource_class.where(email: q_value).first
       end
 
       if @resource and valid_params?(field, q_value) and @resource.valid_password?(resource_params[:password]) and @resource.confirmed?
