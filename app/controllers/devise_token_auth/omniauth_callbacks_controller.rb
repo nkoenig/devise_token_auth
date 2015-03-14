@@ -10,6 +10,7 @@ module DeviseTokenAuth
       # before authentication.
       devise_mapping = request.env['omniauth.params']['resource_class'].underscore.to_sym
       redirect_route = "/#{Devise.mappings[devise_mapping].as_json["path"]}/#{params[:provider]}/callback"
+      redirect_route.sub!(/\/\//, '/')
 
       # preserve omniauth info for success route
       session['dta.omniauth.auth'] = request.env['omniauth.auth']
